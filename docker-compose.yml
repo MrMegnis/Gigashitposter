@@ -1,0 +1,23 @@
+version: "4"
+
+services:
+  website:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+#    command:
+#      - ls ./flask
+    command: >
+      /bin/sh -c 'python flask/main.py'
+  bot:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: >
+      /bin/sh -c 'python tg/bot.py'
