@@ -1,17 +1,22 @@
 import os
 import datetime
+
+import sqlalchemy
 from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, request
 
 import logging
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from sqlalchemy import update
 
 from data import db_session
+from data.token_link import get_user_implicit_flow_link, get_user_token_link
 from data.users import Users
 from forms.loginform import LoginForm
 from forms.post_form import PostForm
 from forms.registerform import RegisterForm
 from VK import vk_main
+from forms.vk_token_form import VkTokenForm
 
 app = Flask(__name__)
 
@@ -93,35 +98,55 @@ def success():
 @login_required
 def post():
     form = PostForm()
+    db_sess = db_session.create_session()
     if form.validate_on_submit():
         logging.warning(form.data)
+        user_id = current_user.id
+        user_vk_access_token = db_sess.execute(
+            sqlalchemy.select(Users.vk_access_token).where(Users.id == user_id)).scalars().first()
+        logging.warning(user_vk_access_token)
+        if user_vk_access_token == "" or isinstance(user_vk_access_token, type(None)):
+            return redirect("/vk_access_token")
         id = form.id.data
         tag = form.tag.data
         images = list()
-        # images = form.images.data
-        # raw_images = request.files.getlist(form.images.name)
         raw_images = form.images.data
         for raw_image in raw_images:
             image = raw_image.stream.read()
             images.append(image)
-            # logging.warning(image)
-        # logging.warning(images)
         start_on = form.start_on.data
         interval = form.interval.data
-        posts = vk_main.create_posts(os.getenv('VK_ACCESS_TOKEN'), images, id, start_on, interval)
+        posts = vk_main.create_posts(user_vk_access_token, images, id, start_on, interval)
         for post in posts:
             post.post()
         logging.warning("POSTED!!!!")
-        # logging.warning(id, type(id))
-        # logging.warning(tag, type(tag))
-        # logging.warning(images, type(images))
-        # logging.warning(start_on, type(start_on))
-        # logging.warning(interval, type(interval))
-        # vk_main.create_post(os.environ.get('VK_ACCESS_TOKEN'), owner_id=id, from_group="1", message="aaaa")
-        # vk_main.create_post(os.environ.get('VK_ACCESS_TOKEN'), "-219613882", "1", "aaaa")
         return render_template('success.html', title='Успех')
-    # return f"{current_user.name}"
     return render_template('post.html', title='Пост', form=form)
+
+
+@app.route('/vk_access_token', methods=['GET', 'POST'])
+@login_required
+def access_token():
+    form = VkTokenForm()
+    user_id = current_user.id
+    user_vk_access_token = db_sess.execute(
+        sqlalchemy.select(Users.vk_access_token).where(Users.id == user_id)).scalars().first()
+    if form.validate_on_submit():
+        vk_access_token = form.token.data
+        logging.warning(vk_access_token)
+        db_sess.execute(update(Users).values(vk_access_token=vk_access_token).where(Users.id == user_id))
+        db_sess.commit()
+        return render_template('success.html', title='Успех')
+    logging.warning(user_id)
+    logging.warning(user_vk_access_token)
+    token_link = get_user_token_link(os.environ.get('VK_CLIENT_ID'), os.environ.get('VK_CLIENT_SECRET'),
+                                             os.environ.get('SET_FLOW_SITE_LINK') + os.environ.get(
+                                                 'SET_IMPLICIT_FLOW_PATH'),
+                                             ["notify", "friends", "photos", "audio", "video", "pages", "menu",
+                                              "status",
+                                              "notes", "wall", "ads", "offline", "docs", "groups",
+                                              "notifications", "stats", "email", "market", ], user_id)
+    return render_template("need_vk_token.html", vk_token_link=token_link, form=form)
 
 
 if __name__ == "__main__":

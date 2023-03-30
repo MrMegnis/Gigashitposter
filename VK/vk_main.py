@@ -25,6 +25,7 @@ class Post:
         if not isinstance(group_id, type(None)):
             group_id = abs(int(group_id))
         response = self.v_api.get_wall_upload_server(group_id, v)
+        logging.warning(response)
         upload_url = response["response"]["upload_url"]
         # photo_info = response["response"]["photo"]
         response = self.v_api.upload_photo(upload_url=upload_url, photo=photo)
@@ -32,7 +33,7 @@ class Post:
         server = response["server"]
         hash_ = response["hash"]
         response = self.v_api.save_wall_photo(photo_multipart, server, hash_, user_id, group_id, lat, long, caption, v)
-        # logging.warning(response)
+        logging.warning(response)
         self.photo_owner_id = response["response"][0]["owner_id"]
         self.photo_id = response["response"][0]["id"]
         self.from_group = from_group

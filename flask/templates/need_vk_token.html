@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content%}
+        <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap" rel="stylesheet">
+        <style>
+          body {
+            text-align: center;
+            padding: 40px 0;
+            background: #EBF0F5;
+          }
+            h1 {
+              color: #B04B4B;
+              font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+              font-weight: 900;
+              font-size: 40px;
+              margin-bottom: 10px;
+            }
+            p {
+              color: #404F5E;
+              font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+              font-size:20px;
+              margin: 0;
+            }
+          i {
+            color: #BC6666;
+            font-size: 100px;
+            line-height: 200px;
+            margin-left:-15px;
+          }
+          .card {
+            background: white;
+            padding: 60px;
+            border-radius: 4px;
+            box-shadow: 0 2px 3px #C8D0D8;
+            display: inline-block;
+            margin: 0 auto;
+          }
+        </style>
+          <div class="card">
+          <div style="border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;">
+            <i class="checkmark">✘</i>
+          </div>
+              <h1>Типа нужен vk access token</h1>
+              <p>Нам нужен твой vk access token.<br/> Отдай.</p>
+              <p> Получить токен можно по ссылке {{ vk_token_link }}</p>
+              <form action="" method="post" novalidate>
+              {{ form.hidden_tag() }}
+              <p>
+                {{ form.token.label }}<br>
+                {{ form.token(class="form-control") }}<br>
+                {% for error in form.token.errors %}
+                <div class="alert alert-danger" role="alert"> {{ error }} </div>
+                {% endfor %}
+              </p>
+              <p> {{ form.submit(type="submit", class = "btn btn-primary") }} </p>
+              </form>
+<!--              <button type="button" class="btn btn-secondary" onclick="location.href='vk_access_token'">Отдать</button>-->
+          </div>
+{% endblock %}

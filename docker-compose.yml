@@ -15,21 +15,21 @@ services:
 #      - ls ./flask
     command: >
       /bin/sh -c 'python flask/main.py'
-  bot:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    command: >
-      /bin/sh -c 'python tg/bot.py'
-  token_recipier_api:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    volumes:
-      - ./:/app
-    expose:
-      - 3001
-    ports:
-      - "3001:3001"
-    command: >
-      /bin/sh -c 'python token_recipient/main_token_recipient.py'
+#  bot:
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile
+#    command: >
+#      /bin/sh -c 'python tg/bot.py'
+#  token_recipier_api:
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./:/app
+#    expose:
+#      - 3001
+#    ports:
+#      - "3001:3001"
+#    command: >
+#      /bin/sh -c 'python token_recipient/main_token_recipient.py'
