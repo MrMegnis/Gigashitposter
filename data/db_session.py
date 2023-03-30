@@ -4,10 +4,12 @@ from sqlalchemy.orm import Session
 import sqlalchemy.ext.declarative as dec
 import psycopg2
 import os
+import dotenv
 
 
 SqlAlchemyBase = orm.declarative_base()
 __factory = None
+dotenv.load_dotenv(r'C:\Users\misha\PycharmProjects\gigashitposterBot\.env')
 
 
 def global_init():
