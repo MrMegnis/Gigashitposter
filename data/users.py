@@ -3,6 +3,7 @@ import sqlalchemy
 from flask_login import UserMixin
 from data.db_session import SqlAlchemyBase
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import orm
 
 
 class User(SqlAlchemyBase, UserMixin):
@@ -21,3 +22,6 @@ class User(SqlAlchemyBase, UserMixin):
     tg_id = sqlalchemy.Column(sqlalchemy.String, unique=True)
     created_at = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
     vk_access_token = sqlalchemy.Column(sqlalchemy.String)
+    ds_id = sqlalchemy.Column(sqlalchemy.String)
+
+    webhooks = orm.relationship("Webhook", back_populates='user')
