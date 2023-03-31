@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content%}
+    <h1>Типа постим</h1>
+    <form action="" enctype="multipart/form-data" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.id.label }}<br>
+            {{ form.id(class="form-control") }}<br>
+            {% for error in form.id.errors %}
+            <div class="alert alert-danger" role="alert"> {{ error }} </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.tag.label }}<br>
+            {{ form.tag(class="form-control") }}<br>
+            {% for error in form.tag.errors %}
+            <div class="alert alert-danger" role="alert"> {{ error }} </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.images.label }}<br>
+            {{ form.images(class="form-control") }}<br>
+            {% for error in form.images.errors %}
+            <div class="alert alert-danger" role="alert"> {{ error }} </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.start_on.label }}<br>
+            {{ form.start_on(class="form-control", type="datetime-local") }}<br>
+            {% for error in form.start_on.errors %}
+            <div class="alert alert-danger" role="alert"> {{ error }} </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.interval.label }}<br>
+            {{ form.interval(class="form-control") }}<br>
+            {% for error in form.interval.errors %}
+            <div class="alert alert-danger" role="alert"> {{ error }} </div>
+            {% endfor %}
+        </p>
+        <p> {{ form.submit(type="submit", class = "btn btn-primary") }} </p>
+    </form>
+{% endblock %}

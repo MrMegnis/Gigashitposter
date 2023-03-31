@@ -9,7 +9,7 @@ run pip install -r requirements.txt
 
 ENV PYTHONPATH "${PYTHONPATH}:app"
 
-EXPOSE 5000
+#EXPOSE 5000
 
 COPY .. /app
 

@@ -1,7 +1,7 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from data.users import User
+from data.users import Users
 from data import db_session
 from data.discord_webhooks import Webhook
 import os
@@ -18,7 +18,7 @@ class WebhookManager(commands.Cog):
         db_sess = db_session.create_session()
         dis_webhook = await channel.create_webhook(name=name)
         cur_webhook = Webhook(ds_id=dis_webhook.id, ds_url=dis_webhook.url, guild_id=str(dis_webhook.guild_id),
-                              user_id=db_sess.query(User).filter(User.ds_id == str(interaction.user.id)).first().id)
+                              user_id=db_sess.query(Users).filter(Users.ds_id == str(interaction.user.id)).first().id)
         db_sess.add(cur_webhook)
         db_sess.commit()
         await interaction.response.send_message("Успешно", ephemeral=True)
