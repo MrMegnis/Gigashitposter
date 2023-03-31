@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ui import Button
 from data.db_session import create_session
-from data.users import User
+from data.users import Users
 
 
 class LoginModal(discord.ui.Modal):
@@ -15,11 +15,11 @@ class LoginModal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         db_sess = create_session()
-        user = db_sess.query(User).filter(User.name == self.children[0].value).first()
+        user = db_sess.query(Users).filter(Users.name == self.children[0].value).first()
 
         async def accept_callback(interaction: discord.Interaction):
             try:
-                db_sess.query(User).filter(User.ds_id == str(interaction.user.id)).first().ds_id = None
+                db_sess.query(Users).filter(Users.ds_id == str(interaction.user.id)).first().ds_id = None
             except:
                 pass
             user.ds_id = str(interaction.user.id)
@@ -30,10 +30,10 @@ class LoginModal(discord.ui.Modal):
 
         if not user:
             await interaction.response.send_message("Похоже, что пользователя с таким логином не существует")
-        elif db_sess.query(User).filter(User.ds_id == str(interaction.user.id)).first() and db_sess.query(User).filter(User.ds_id == str(interaction.user.id)).first() == user:
+        elif db_sess.query(Users).filter(Users.ds_id == str(interaction.user.id)).first() and db_sess.query(Users).filter(Users.ds_id == str(interaction.user.id)).first() == user:
             return await interaction.response.send_message("Вы уже в аккаунте", ephemeral=True)
-        elif db_sess.query(User).filter(User.ds_id == str(interaction.user.id)).first() and\
-                db_sess.query(User).filter(User.ds_id == str(interaction.user.id)).first() != user and \
+        elif db_sess.query(Users).filter(Users.ds_id == str(interaction.user.id)).first() and\
+                db_sess.query(Users).filter(Users.ds_id == str(interaction.user.id)).first() != user and \
                 user.check_password(self.children[1].value):
             button_accept = Button(label="Да", style=discord.ButtonStyle.green)
             button_refuse = Button(label="Нет", style=discord.ButtonStyle.red)
@@ -77,7 +77,7 @@ class LoginCog(commands.Cog):
     @app_commands.command(name="quit", description="this command will log out of your account")
     async def quit(self, interaction: discord.Interaction):
         db_sess = create_session()
-        user = db_sess.query(User).filter(User.ds_id == str(interaction.user.id)).first()
+        user = db_sess.query(Users).filter(Users.ds_id == str(interaction.user.id)).first()
         if user:
             user.ds_id = None
             db_sess.commit()

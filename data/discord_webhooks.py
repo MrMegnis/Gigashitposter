@@ -13,4 +13,4 @@ class Webhook(SqlAlchemyBase, UserMixin):
     ds_url = sqlalchemy.Column(sqlalchemy.String)
     guild_id = sqlalchemy.Column(sqlalchemy.String)
 
-    user = orm.relationship('User')
+    user = orm.relationship('Users')
