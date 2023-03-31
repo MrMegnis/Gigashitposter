@@ -69,14 +69,10 @@ def create_posts(access_token: str, photos: list, group_id, start_on, interval, 
     publish_date = start_on
     time_delta = datetime.timedelta(hours=interval.hour, minutes=interval.minute, seconds=interval.second)
     for photo, message in zip(photos, messages):
-        with open("aboba.png", "wb") as f:
-            f.write(photo)
-        photo = open("aboba.png", 'rb')
         post = Post(access_token, photo, group_id, "1", message, publish_date=publish_date.timestamp())
         # post="a"
         # print(publish_date)
         # logging.warning(publish_date.timestamp())
-        # logging.warning(photo, dir(photo))
         publish_date += time_delta
         posts.append(post)
     return posts

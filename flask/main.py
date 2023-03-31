@@ -1,5 +1,6 @@
 import os
 import datetime
+from io import BytesIO
 
 import sqlalchemy
 from dotenv import load_dotenv
@@ -17,6 +18,7 @@ from forms.post_form import PostForm
 from forms.registerform import RegisterForm
 from VK import vk_main
 from forms.vk_token_form import VkTokenForm
+from images.images import create_byte_image
 
 app = Flask(__name__)
 
@@ -113,7 +115,7 @@ def post():
         raw_images = form.images.data
         for raw_image in raw_images:
             image = raw_image.stream.read()
-            images.append(image)
+            images.append(create_byte_image(image))
         start_on = form.start_on.data
         interval = form.interval.data
         posts = vk_main.create_posts(user_vk_access_token, images, id, start_on, interval)

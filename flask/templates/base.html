@@ -17,7 +17,9 @@
     <div>
         <button type="button" class="btn btn-secondary" onclick="location.href='home'">Home</button>
         {% if current_user.is_authenticated %}
-            <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+        <button type="button" class="btn btn-secondary" onclick="location.href='post'">Post</button>
+        <button type="button" class="btn btn-secondary" onclick="location.href='vk_access_token'">Set Token</button>
+        <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
         {% else %}
             <p>
                 <button type="button" class="btn btn-secondary" onclick="location.href='login'">Login</button>

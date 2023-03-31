@@ -39,7 +39,7 @@ class VK_Api:
 
     def upload_photo(self, upload_url, photo):
         # url = get_wall_upload_server(access_token, group_id, v)["response"]["upload_url"]
-        response = requests.post(upload_url, files = {'file': photo}).json()
+        response = requests.post(upload_url, files = {'file': ("new_year_floppa.png", photo)}).json()
         print(response)
         return response
 
