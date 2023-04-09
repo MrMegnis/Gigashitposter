@@ -25,3 +25,4 @@ class Users(SqlAlchemyBase, UserMixin):
     ds_id = sqlalchemy.Column(sqlalchemy.String)
 
     webhooks = orm.relationship("Webhook", back_populates='user')
+    posts = orm.relationship("Posts", back_populates='user')

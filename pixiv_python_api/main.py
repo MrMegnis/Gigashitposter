@@ -135,7 +135,14 @@ class PixivApi:
 
 
 if __name__ == "__main__":
-    pa = PixivApi()
+    # pa = PixivApi()
     # pa.get_tag("女の子", 0, 60)
-    pa.get_artwork("91046118")
+    # pa.get_artwork("91046118")
     # time.sleep(50)
+    url = "localhost:3000/create"
+    params ={
+        "user_id" : 1,
+        "tag" : "anime",
+        "amount" : 1
+    }
+    response = requests.post(url, params=params)

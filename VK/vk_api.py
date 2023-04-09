@@ -1,8 +1,10 @@
 import requests
 from dotenv import load_dotenv
 import os
+
 load_dotenv('../.env')
-VK_API_VERSION=os.environ.get('VK_API_VERSION')
+VK_API_VERSION = os.environ.get('VK_API_VERSION')
+
 
 class VK_Api:
     API_URL = "https://api.vk.com/method"
@@ -17,7 +19,7 @@ class VK_Api:
             "v": v
         }
         for param in [(group_id, "group_id")]:
-            if not isinstance(param, type(None)):
+            if not isinstance(param[0], type(None)):
                 params[param[1]] = param[0]
         response = requests.get(url, params=params).json()
         print(response)
@@ -29,9 +31,9 @@ class VK_Api:
             "access_token": self.access_token,
             "v": v
         }
-        print("upload g_id:",group_id)
+        print("upload g_id:", group_id)
         for param in [(group_id, "group_id")]:
-            if not isinstance(param, type(None)):
+            if not isinstance(param[0], type(None)):
                 params[param[1]] = param[0]
         response = requests.get(url, params=params).json()
         print(response)
@@ -39,7 +41,7 @@ class VK_Api:
 
     def upload_photo(self, upload_url, photo):
         # url = get_wall_upload_server(access_token, group_id, v)["response"]["upload_url"]
-        response = requests.post(upload_url, files = {'file': ("new_year_floppa.png", photo)}).json()
+        response = requests.post(upload_url, files={'file': ("new_year_floppa.png", photo)}).json()
         print(response)
         return response
 
@@ -59,7 +61,7 @@ class VK_Api:
             (user_id, "user_id"), (group_id, "group_id"),
             (latitude, "latitude"), (longitude, "longitude"), (caption, "caption")
         ]:
-            if not isinstance(param, type(None)):
+            if not isinstance(param[0], type(None)):
                 params[param[1]] = param[0]
         response = requests.get(url, params=params).json()
         print(response)
@@ -80,6 +82,21 @@ class VK_Api:
                       (guid, "guid"),
                       (close_comments, "close_comments"), (donut_paid_duration, "donut_paid_duration"),
                       (mute_notifications, "mute_notifications"), (copyright_, "copyright_"), (topic_id, "topic_id")]:
+            if not isinstance(param[0], type(None)):
+                params[param[1]] = param[0]
+        response = requests.get(url, params=params).json()
+        # print(response)
+        return response
+
+    def groups_get(self, user_id=None, extended=None, filter=None, fields=None, offset=None, count=None, v=VK_API_VERSION):
+        url = self.API_URL + "/groups.get"
+
+        params = {
+            "access_token": self.access_token,
+            "v": v
+        }
+        for param in [(user_id, "user_id"), (extended, "extended"), (filter, "filter"), (fields, "fields"),
+                      (offset, "offset"), (count, "count")]:
             if not isinstance(param, type(None)):
                 params[param[1]] = param[0]
         response = requests.get(url, params=params).json()

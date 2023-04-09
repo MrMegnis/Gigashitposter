@@ -4,6 +4,13 @@
     <h1>Типа постим</h1>
     <form action="" enctype="multipart/form-data" method="post" novalidate>
         {{ form.hidden_tag() }}
+<!--        <p>-->
+<!--            {{ form.id.label }}<br>-->
+<!--            {{ form.id(class="form-control") }}<br>-->
+<!--            {% for error in form.id.errors %}-->
+<!--            <div class="alert alert-danger" role="alert"> {{ error }} </div>-->
+<!--            {% endfor %}-->
+<!--        </p>-->
         <p>
             {{ form.id.label }}<br>
             {{ form.id(class="form-control") }}<br>
