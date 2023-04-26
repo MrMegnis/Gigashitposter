@@ -9,7 +9,7 @@ import dotenv
 
 SqlAlchemyBase = orm.declarative_base()
 __factory = None
-dotenv.load_dotenv(r'C:\Users\misha\PycharmProjects\gigashitposterBot\.env')
+# dotenv.load_dotenv(r'C:\Users\misha\PycharmProjects\gigashitposterBot\.env')
 
 
 def global_init():

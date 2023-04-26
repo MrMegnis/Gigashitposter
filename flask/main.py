@@ -15,7 +15,7 @@ from data.posts import Posts
 from data.tags import Tags
 from data.token_link import get_user_implicit_flow_link, get_user_token_link
 from data.users import Users
-from deviantart_parser.parser import get_tag_last_deviant_id
+from deviantart_checker.parser import get_tag_last_deviant_id
 from forms.loginform import LoginForm
 from forms.post_form import PostForm
 from forms.registerform import RegisterForm

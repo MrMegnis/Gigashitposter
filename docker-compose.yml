@@ -21,15 +21,15 @@ services:
 #      dockerfile: Dockerfile
 #    command: >
 #      /bin/sh -c 'python tg/bot.py'
-#  token_recipier_api:
-#    build:
-#      context: ./
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./:/app
-#    expose:
-#      - 3001
-#    ports:
-#      - "3001:3001"
-#    command: >
-#      /bin/sh -c 'python token_recipient/main_token_recipient.py'
+  deviant_checker:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    expose:
+      - 3001
+    ports:
+      - "3001:3001"
+    command: >
+      /bin/sh -c 'python deviantart_checker/main.py'
