@@ -29,28 +29,30 @@ def save_page(page, name):
 
 
 class PixivApi:
-    def __init__(self, driver_full_path="C:\Рабочий стол\___Проекты\Gigashitposter\pixiv_python_api\chromedriver.exe"):
-        self.selenium_start(driver_full_path)
+    def __init__(self, driver_type=0):
+        '''if driver_type is 0, then Chrome driver will be used, else Mozilla driver'''
+        self.chrome_driver = "C:\\Рабочий стол\\_____Projects\\Gigashitposter\\pixiv_python_api\\chromedriver.exe"
+        self.mozila_driver = "C:\\Рабочий стол\\_____Projects\\Gigashitposter\\pixiv_python_api\\geckodriver.exe"
+        if not driver_type:
+            self.selenium_start_chrome(self.chrome_driver)
+        else:
+            self.selenium_start_mozila(self.mozila_driver)
         self.main_page = "https://www.pixiv.net"
         self.login_page = "https://accounts.pixiv.net/login"
         self.tag_page = "https://www.pixiv.net/en/tags"
 
-    def selenium_start(self, driver_full_path):
+    def selenium_start_chrome(self, driver_full_path):
         self.service = Service(executable_path=driver_full_path)
         options = webdriver.ChromeOptions()
-        options.page_load_strategy = "eager"
-        options.add_argument("--disable-blink-features=AutomationControlled")
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option("useAutomationExtension", False)
+        options.add_argument('--headless')
+        options.add_argument('--disk-cache-dir=/cahce_chrome')
         self.driver = webdriver.Chrome(service=self.service, options=options)
-        self.driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-            'source': '''
-                    delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
-                    delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
-                    delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
-            '''
-        })
-        self.driver.execute_cdp_cmd("Network.enable",)
+    def selenium_start_mozila(self, driver_full_path):
+        self.service = Service(executable_path=driver_full_path)
+        options = webdriver.FirefoxOptions()
+        options.add_argument('--headless')
+        options.add_argument('--disk-cache-dir=/cahce_mozila')
+        self.driver = webdriver.Firefox(service=self.service, options=options)
 
     def login(self, login, password):
         '''Doesn't work (((('''
@@ -119,30 +121,53 @@ class PixivApi:
         return illustrations_links
 
     def get_artwork(self, artwork_id: str):
+        print("aboba")
         url = self.main_page + f"/artworks/{artwork_id}"
         print(url)
         self.driver.get(url)
-        images_btn = WebDriverWait(self.driver, 100).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".sc-emr523-0")))
-        images_btn.click()
-        # time.sleep(100)
+        # images_holder = WebDriverWait(self.driver,100).until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".sc-1yvhotl-3")))
+        # print(images_holder)
+        try:
+            WebDriverWait(self.driver, 100).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, ".sc-emr523-0")))
+            images_btn = WebDriverWait(self.driver, 100).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, ".sc-emr523-0")))
+            images_btn.click()
+            print(images_btn, "aaaaaaaaaa")
+        except Exception as e:
+            print(e)
+        time.sleep(100)
         page = self.driver.page_source
         save_page(page, "aaaa.html")
         bs = BeautifulSoup(page, "lxml")
-        images = list(map(lambda x : x.get("src"), bs.find_all("img", "sc-1qpw8k9-1 jOmqKq")))
+        abobaich = bs.find("figure", {"class" : "sc-1yvhotl-3 jUCdwp"})
+        print(abobaich, len(abobaich))
+        images = list(map(lambda x: x.get("src"), bs.find_all("img")))
         print(images)
-        time.sleep(100)
-        return images
+        images2 = abobaich.find_all("img")
+        print(images2, len(images2))
+        return images2
+
+
+
+def main():
+    pa = PixivApi(1)
+    # pa.get_tag("女の子", 0, 60)
+    pa.get_artwork("110627849")
+    time.sleep(50)
+
+
+def main2():
+    url = "https://i.pximg.net/img-master/img/2023/08/09/23/15/18/110682177_p0_master1200.jpg"
+    headers = {
+        'referer': "https://www.pixiv.net/en/artworks/110682177"
+    }
+    params = {
+
+    }
+    response = requests.get(url, headers=headers, params=params).content
+    print(response)
 
 
 if __name__ == "__main__":
-    # pa = PixivApi()
-    # pa.get_tag("女の子", 0, 60)
-    # pa.get_artwork("91046118")
-    # time.sleep(50)
-    url = "localhost:3000/create"
-    params ={
-        "user_id" : 1,
-        "tag" : "anime",
-        "amount" : 1
-    }
-    response = requests.post(url, params=params)
+    main()
+    # main2()
